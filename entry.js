@@ -26,26 +26,7 @@ function Service(Me, API) {
   //   console.log(error, info);
   // })
   // Safe define a JSONfunction.
-  ss.sdef('sendMail', (json, entityID, returnJSON)=> {
-    json.from = DaemonSettings.company_name+' <'+Me.Settings.transporter_settings.auth.user+'>';
-    transporter.sendMail(json, (error, info)=> {
-      if (error) {
-        returnJSON(false, {s: JSON.stringify(error, null, 2)});
 
-        // console.log(error);
-      } else {
-        returnJSON(false, {s: JSON.stringify(info, null, 2)});
-
-        // console.log('Email sent: ' + info.response);
-      }
-    })
-    // First parameter for error, next is JSON to be returned.
-
-  },
-  // In case fail.
-  ()=>{
-    console.log('Auth Failed.');
-  });
 
   // ServiceSocket.onData, in case client send data to this Service.
   // You will need entityID to Authorize remote user. And identify remote.
@@ -94,6 +75,28 @@ function Service(Me, API) {
     // API.Service.ActivitySocket.createDefaultAdminDeamonSocket('Another Service', (err, activitysocket)=> {
       // accessing other service
     // });
+    api.Daemon.getSettings((err, DaemonSettings)=>{
+      ss.sdef('sendMail', (json, entityID, returnJSON)=> {
+        json.from = DaemonSettings.company_name+' <'+Me.Settings.transporter_settings.auth.user+'>';
+        transporter.sendMail(json, (error, info)=> {
+          if (error) {
+            returnJSON(false, {s: JSON.stringify(error, null, 2)});
+
+            // console.log(error);
+          } else {
+            returnJSON(false, {s: JSON.stringify(info, null, 2)});
+
+            // console.log('Email sent: ' + info.response);
+          }
+        })
+        // First parameter for error, next is JSON to be returned.
+
+      },
+      // In case fail.
+      ()=>{
+        console.log('Auth Failed.');
+      });
+    });
   }
 
   // If the daemon stop, your service recieve close signal here.
