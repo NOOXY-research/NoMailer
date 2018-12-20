@@ -75,7 +75,7 @@ function Service(Me, API) {
     // API.Service.ActivitySocket.createDefaultAdminDeamonSocket('Another Service', (err, activitysocket)=> {
       // accessing other service
     // });
-    api.Daemon.getSettings((err, DaemonSettings)=>{
+    API.Daemon.getSettings((err, DaemonSettings)=>{
       ss.sdef('sendMail', (json, entityID, returnJSON)=> {
         json.from = DaemonSettings.company_name+' <'+Me.Settings.transporter_settings.auth.user+'>';
         transporter.sendMail(json, (error, info)=> {
