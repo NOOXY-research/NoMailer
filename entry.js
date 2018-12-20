@@ -16,17 +16,6 @@ function Service(Me, API) {
   // E.g. setTimeout(API.SafeCallback(callback), timeout)
   let safec = API.SafeCallback;
   let transporter = NodeMailer.createTransport(Me.Settings.transporter_settings);
-  // Your settings in manifest file.
-  // transporter.sendMail({
-  //   from: Me.Settings.transporter_settings.auth.user,
-  //   to: "unicoco12345@gmail.com",
-  //   subject: 'Sending Email using Node.js',
-  //   text: 'That was easy!'
-  // }, (error, info)=> {
-  //   console.log(error, info);
-  // })
-  // Safe define a JSONfunction.
-
 
   // ServiceSocket.onData, in case client send data to this Service.
   // You will need entityID to Authorize remote user. And identify remote.
