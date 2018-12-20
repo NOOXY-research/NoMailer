@@ -27,7 +27,7 @@ function Service(Me, API) {
   // })
   // Safe define a JSONfunction.
   ss.sdef('sendMail', (json, entityID, returnJSON)=> {
-    json.from = Me.Settings.transporter_settings.auth.user;
+    json.from = DaemonSettings.company_name+' <'+Me.Settings.transporter_settings.auth.user+'>';
     transporter.sendMail(json, (error, info)=> {
       if (error) {
         returnJSON(false, {s: JSON.stringify(error, null, 2)});
