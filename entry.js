@@ -5,28 +5,28 @@
 'use strict';
 const NodeMailer = require('nodemailer');
 
-function Service(Me, API) {
+function Service(Me, NoService) {
   // Initialize your service here synchronous. Do not use async here!
 
   // Get the service socket of your service
-  let ss = API.Service.ServiceSocket;
+  let ss = NoService.Service.ServiceSocket;
   // BEWARE! To prevent callback error crash the system.
-  // If you call an callback function which is not API provided. Such as setTimeout(callback, timeout).
-  // You need to wrap the callback funciton by API.SafeCallback.
-  // E.g. setTimeout(API.SafeCallback(callback), timeout)
-  let safec = API.SafeCallback;
+  // If you call an callback function which is not NoService provided. Such as setTimeout(callback, timeout).
+  // You need to wrap the callback funciton by NoService.SafeCallback.
+  // E.g. setTimeout(NoService.SafeCallback(callback), timeout)
+  let safec = NoService.SafeCallback;
   let transporter = NodeMailer.createTransport(Me.Settings.transporter_settings);
 
   // ServiceSocket.onData, in case client send data to this Service.
   // You will need entityID to Authorize remote user. And identify remote.
   ss.on('data', (entityID, data) => {
     // Get Username and process your work.
-    API.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+    NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
       // To store your data and associated with userid INSEAD OF USERNAME!!!
       // Since userid can be promised as a unique identifer!!!
       let userid = null;
-      // Get userid from API
-      API.Authenticity.getUserID(username, (err, id) => {
+      // Get userid from NoService
+      NoService.Authenticity.getUserID(username, (err, id) => {
         userid = id;
       });
       // process you operation here
@@ -43,12 +43,12 @@ function Service(Me, API) {
   // ServiceSocket.onClose, in case connection close.
   ss.on('close', (entityID, callback) => {
     // Get Username and process your work.
-    API.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+    NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
       // To store your data and associated with userid INSEAD OF USERNAME!!!
       // Since userid can be promised as a unique identifer!!!
       let userid = null;
-      // Get userid from API
-      API.Authenticity.getUserID(username, (err, id) => {
+      // Get userid from NoService
+      NoService.Authenticity.getUserID(username, (err, id) => {
         userid = id;
       });
       // process you operation here
@@ -61,10 +61,10 @@ function Service(Me, API) {
   // Here is where your service start
   this.start = ()=> {
     // Access another service on this daemon
-    // API.Service.ActivitySocket.createDefaultAdminDeamonSocket('Another Service', (err, activitysocket)=> {
+    // NoService.Service.ActivitySocket.createDefaultAdminDeamonSocket('Another Service', (err, activitysocket)=> {
       // accessing other service
     // });
-    API.Daemon.getSettings((err, DaemonSettings)=>{
+    NoService.Daemon.getSettings((err, DaemonSettings)=>{
       ss.sdef('sendMail', (json, entityID, returnJSON)=> {
         json.from = DaemonSettings.company_name+' <'+Me.Settings.transporter_settings.auth.user+'>';
         transporter.sendMail(json, (error, info)=> {
